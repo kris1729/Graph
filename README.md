@@ -481,6 +481,7 @@ int orangesRotting(vector<vector<int>>& grid) {
                     vis[i][j] = true;
                     q.push({{i, j}, 0});
                 }
+                // bfs code
         int tm = 0;
         while (!q.empty()) {
             int r = q.front().first.first;
@@ -507,5 +508,30 @@ int orangesRotting(vector<vector<int>>& grid) {
                     return -1;
             // totale time
         return tm;
+    }
+```
+> # Flood Fill
+![](./Images/Question/Flood%20Fill.png)
+```cpp
+   void solve(int r , int c , vector<vector<int>>& ans , int color , int inColor , vector<int>&nrow , vector<int>ncol ){
+    ans[r][c] = color;
+    int n = ans.size();
+    int m = ans[0].size();
+    for(int i =0;i<4;i++){
+       int row = r + nrow[i];
+       int col = c + ncol[i];
+       if(row>=0&&row<n && col>=0&&col<m && ans[row][col]==inColor && ans[row][col]!=color)
+       solve(row , col, ans , color , inColor , nrow , ncol);
+    }
+   }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        vector<vector<int>>ans = image;
+        int inColor = ans[sr][sc];
+        // optional
+        if(inColor==color)return ans;
+        vector<int> nrow = {-1,0,1,0};
+        vector<int> ncol = {0,1,0,-1};
+        solve(sr,sc,ans,  color,inColor,nrow ,ncol);
+        return ans;
     }
 ```
