@@ -535,3 +535,106 @@ int orangesRotting(vector<vector<int>>& grid) {
         return ans;
     }
 ```
+> # Undirected Graph Cycle
+![](./Images/Question/Undirected%20Graph%20Cycle.png)
+code using bfs
+```cpp
+ bool bfs(int node , vector<bool>&vis, vector<int>adj[]){
+        queue<pair<int,int>>q;
+        q.push({node,-1});
+        vis[node] = true;
+        
+        while(!q.empty()){
+            int nod = q.front().first;
+            int parent = q.front().second;
+            q.pop();
+            for(auto x : adj[nod]){
+                if(x==parent)continue;
+                if(vis[x])return true;
+                q.push({x,nod});
+                vis[x] = true;
+            }
+           
+        }
+        return false;
+    }
+    bool isCycle(int V, vector<int> adj[]) {
+       // code using bfs;
+       vector<bool>vis(V,0);
+       for(int i =0;i<V;i++){
+        if(!vis[i]&&bfs(i,vis,adj)==true)return true;}
+        
+        return false;
+    }
+```
+code using dfs
+```cpp
+// dfs function
+bool dfs(int node, vector<bool>& vis, vector<int> adj[], int parent) {
+        vis[node] = true;
+        for (auto child : adj[node]) {
+            if (child == parent)continue;
+            if (vis[child]) return true;
+            if (dfs(child, vis, adj, node) == true)return true;
+        }
+        return false;
+    }
+    // main code
+    bool isCycle(int V, vector<int> adj[]) {
+
+        vector<bool> vis(V, 0);
+        for (int i = 0; i < V; i++)
+            if (!vis[i] && dfs(i, vis, adj, -1))
+                return true;
+        return false;
+    }
+```
+
+> # 01 Matrix  ## Important
+![](./Images/Question/01%20Matrix.png)
+
+approch --> for all zero the step will be 0 than push all of them and after this run bfs all all zero with stemp++
+
+```cpp
+   vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        // make visited vector
+        int n = mat.size(), m = mat[0].size();
+        vector<vector<bool>> vis(n, vector<bool>(m, 0));
+        // make ans vector
+        vector<vector<int>> ans(n, vector<int>(m, -1));
+        // make a q for bfs ({{row,col},step})
+        queue<pair<pair<int, int>, int>> q;
+        // insert all Zero with zero step
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (mat[i][j] == 0) {
+                    vis[i][j] = true;
+                    q.push({{i, j}, 0});
+                }
+
+        // apply bfs all the zero
+        vector<int> drow = {-1, 1, 0, 0};
+        vector<int> dcol = {0, 0, -1, 1};
+        while (!q.empty()) {
+            int r = q.front().first.first;
+            int c = q.front().first.second;
+            int step = q.front().second;
+            q.pop();
+            // update the ans
+            ans[r][c] = step;
+
+            for (int i = 0; i < 4; i++) {
+                int row = r + drow[i];
+                int col = c + dcol[i];
+                if (row >= 0 && col >= 0 && row < n && col < m &&
+                    !vis[row][col]) {
+                    vis[row][col] = true;
+                    update step to step+1
+                    q.push({{row, col}, step + 1});
+                }
+            }
+        }
+        return ans;
+    }
+```
