@@ -638,3 +638,53 @@ approch --> for all zero the step will be 0 than push all of them and after this
         return ans;
     }
 ```
+
+> # Surrounded Regions
+solve using bfs
+
+```cpp
+  bool Boundry(int i, int j, int n, int m) {
+        return ((i == 0) || (j == 0) || (i == n - 1) || (j == m - 1));
+    }
+    void solve(vector<vector<char>>& board) {
+        // using bfs , run bfs all the no boundry '0' and convert it into
+        // the 'N'
+        int n = board.size(), m = board[0].size();
+        vector<vector<bool>> vis(n, vector<bool>(m, 0));
+        queue<pair<int, int>> q;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if ((!vis[i][j]) && (board[i][j] == 'O') &&
+                    (Boundry(i, j, n, m))) {
+                    q.push({i, j});
+                    vis[i][j] = true;
+                }
+
+        // bfs
+        vector<int> drow = {1, -1, 0, 0}, dcol = {0, 0, -1, 1};
+        while (!q.empty()) {
+            int r = q.front().first;
+            int c = q.front().second;
+            q.pop();
+            board[r][c] = 'N';
+            for (int i = 0; i < 4; i++) {
+                int row = r + drow[i];
+                int col = c + dcol[i];
+                if (row >= 0 && col >= 0 && row < n && col < m &&
+                    !vis[row][col] && board[row][col] == 'O') {
+                    q.push({row, col});
+                    vis[row][col] = true;
+                }
+            }
+        }
+
+        //    change all 'N' into 'X'
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (board[i][j] == 'N')
+                    board[i][j] = 'O';
+                else
+                  board[i][j] = 'X';
+    }
+```
