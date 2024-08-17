@@ -688,3 +688,83 @@ solve using bfs
                   board[i][j] = 'X';
     }
 ```
+using dfs 
+
+```cpp
+ void dfs(int r, int c, vector<vector<bool>>& vis,
+             vector<vector<char>>& board, vector<int>& drow, vector<int> dcol,
+             int n, int m) {
+        vis[r][c] = true;
+        board[r][c] = 'B';
+        for (int i = 0; i < 4; i++) {
+            int row = r + drow[i];
+            int col = c + dcol[i];
+            if (row >= 0 && col >= 0 && row < n && col < m && !vis[row][col] &&
+                board[row][col] == 'O') {
+                dfs(row, col, vis, board, drow, dcol, n, m);
+            }
+        }
+    }
+    void solve(vector<vector<char>>& board) {
+        // apply dfs at the boundry
+        int n = board.size(), m = board[0].size();
+        vector<vector<bool>> vis(n, vector<bool>(m, 0));
+        vector<int> drow = {-1, 1, 0, 0}, dcol = {0, 0, -1, 1};
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++) {
+                if ((board[i][j] == 'O') &&
+                    (i == 0 || j == 0 || i == n - 1 || j == m - 1)) {
+                    dfs(i, j, vis, board, drow, dcol, n, m);
+                }
+            }
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (board[i][j] == 'B')
+                    board[i][j] = 'O';
+                else
+                    board[i][j] = 'X';
+    }
+```
+
+> # Number of Enclaves
+approch -> convert all one into 0 which are at the boundry or attach to the boudy 1 
+
+code using bfs
+```cpp
+ int numEnclaves(vector<vector<int>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        // solve using bfs make all boundry 1 and attachment 1's in 0
+        vector<vector<bool>> vis(n, vector<bool>(m, 0));
+        queue<pair<int, int>> q;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if ((grid[i][j] == 1) &&
+                    (i == 0 || j == 0 || i == n - 1 || j == m - 1)) {
+                    q.push({i, j});
+                    vis[i][j] = true;
+                }
+        vector<int> drow = {-1, 1, 0, 0}, dcol = {0, 0, -1, 1};
+        while (!q.empty()) {
+            int r = q.front().first;
+            int c = q.front().second;
+            grid[r][c] = 0;
+            q.pop();
+            for (int i = 0; i < 4; i++) {
+                int row = r + drow[i];
+                int col = c + dcol[i];
+                if (row >= 0 && col >= 0 && row < n && col < m &&
+                    !vis[row][col] && grid[row][col] == 1) {
+                    q.push({row, col});
+                    vis[row][col] = true;
+                }
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (grid[i][j] == 1)
+                    ans++;
+        return ans;
+    }
+```
