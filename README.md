@@ -768,3 +768,70 @@ code using bfs
         return ans;
     }
 ```
+code using dfs
+```cpp
+  void dfs(int r, int c, vector<vector<bool>>& vis, vector<vector<int>>& grid,
+             vector<int>& drow, vector<int>& dcol, int n, int m) {
+        vis[r][c] = true;
+        grid[r][c] = 2;
+        for (int i = 0; i < 4; i++) {
+            int row = r + drow[i], col = c + dcol[i];
+            // check barrior
+            if (row >= 0 && col >= 0 && row < n && col < m && !vis[row][col] &&
+                grid[row][col] == 1) {
+                dfs(row, col, vis, grid, drow, dcol, n, m);
+            }
+        }
+    }
+    int numEnclaves(vector<vector<int>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        vector<vector<bool>> vis(n, vector<bool>(m, 0));
+        vector<int> drow = {-1, 1, 0, 0}, dcol = {0, 0, -1, 1};
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (grid[i][j] == 1 &&
+                    (i == 0 || j == 0 || i == n - 1 || j == m - 1))
+                    dfs(i, j, vis, grid, drow, dcol, n, m);
+
+        int ans = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (grid[i][j] == 1)
+                    ans++;
+        return ans;
+    }
+```
+> #  Is Graph Bipartite?
+![](./Images/Question/Is%20Graph%20Bipartite.png)
+
+```cpp
+bool bfs(int sr , vector<vector<int>>&graph,vector<int>&color){
+    int n = graph.size();
+    queue<int>q;
+        q.push(sr);
+        color[sr] = 0;
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            for(auto child:graph[node]){
+                // child is not colored
+                if(color[child]==-1){
+                    color[child] = (color[node]+1)%2;
+                    q.push(child);
+                }
+                // if child is colored
+                if(color[child]==color[node])return false;
+            }
+        }
+        return true;
+}
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<int>color(n,-1);
+        for(int i =0;i<n;i++){
+            if((color[i]==-1)&&(bfs(i,graph,color)==false))return false;
+        }
+
+     return true;
+    }
+```
